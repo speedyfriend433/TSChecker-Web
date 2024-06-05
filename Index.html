@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrollStore Checker</title>
+</head>
+<body>
+    <div>
+        <h1>TrollStore Checker</h1>
+        <form id="trollStoreForm">
+            <div>
+                <label for="versionType">Version Type:</label>
+                <select id="versionType">
+                    <option value="release">Release</option>
+                    <option value="beta">Beta</option>
+                </select>
+            </div>
+            <div>
+                <label for="architecture">Architecture:</label>
+                <select id="architecture">
+                    <option value="arm64">arm64</option>
+                    <option value="arm64e">arm64e</option>
+                </select>
+            </div>
+            <div>
+                <label for="iOSVersion">iOS Version:</label>
+                <input type="text" id="iOSVersion" placeholder="Enter iOS Version">
+            </div>
+            <div>
+                <button type="button" onclick="checkSupport()">Check Support</button>
+            </div>
+        </form>
+        <div id="supportInfo"></div>
+    </div>
+
+    <script>
+        function checkSupport() {
+            var iOSVersion = document.getElementById("iOSVersion").value;
+            var selectedVersionType = document.getElementById("versionType").value;
+            var selectedArchitecture = document.getElementById("architecture").value;
+
+            var trollStoreSupportData = [
+                // TrollStoreSupportData array contents here...
+            ];
+
+            var result = trollStoreSupportInfo(iOSVersion, selectedVersionType, selectedArchitecture, trollStoreSupportData);
+            var supportInfoDiv = document.getElementById("supportInfo");
+
+            if (result.supported) {
+                supportInfoDiv.innerHTML = "<h2>Support Information</h2>" +
+                    "<p>iOS Version: " + iOSVersion + "</p>" +
+                    "<p>TrollStore Support: Supported</p>";
+
+                if (result.supportedRange) {
+                    supportInfoDiv.innerHTML += "<p>" + result.supportedRange + "</p>";
+                }
+
+                if (result.officialWebsites) {
+                    supportInfoDiv.innerHTML += "<h3>Official Websites</h3>";
+                    result.officialWebsites.forEach(function (website) {
+                        supportInfoDiv.innerHTML += "<button onclick=\"openURL('" + website[1] + "')\">" + website[0] + " Official Website</button>";
+                    });
+                }
+
+                if (result.installationGuides) {
+                    supportInfoDiv.innerHTML += "<h3>Installation Guides</h3>";
+                    result.installationGuides.forEach(function (guide) {
+                        supportInfoDiv.innerHTML += "<button onclick=\"openURL('" + guide[1] + "')\">" + guide[0] + " Installation Guide</button>";
+                    });
+                }
+            } else {
+                supportInfoDiv.innerHTML = "<h2>Support Information</h2>" +
+                    "<p>iOS Version: " + iOSVersion + "</p>" +
+                    "<p>TrollStore Support: Not Supported</p>";
+            }
+        }
+
+        function trollStoreSupportInfo(iOSVersion, selectedVersionType, selectedArchitecture, trollStoreSupportData) {
+            var version = selectedVersionType === "beta" ? iOSVersion + " beta" : iOSVersion;
+            var architecture = selectedArchitecture;
+
+            for (var i = 0; i < trollStoreSupportData.length; i++) {
+                var data = trollStoreSupportData[i];
+
+                if (isVersionInRange(version, data.fromVersion, data.toVersion)) {
+                    if (data.platforms.includes(architecture)) {
+                        if (Object.keys(data.supported).length > 0) {
+                            var officialWebsites = [];
+                            var installationGuides = [];
+
+                            for (var key in data.supported) {
+                                if (key === "TrollInstallerX") {
+                                    officialWebsites.push(["TrollInstallerX", "https://github.com/alfiecg24/TrollInstallerX/tree/1.0.2"]);
+                                    installationGuides.push(["TrollInstallerX", "https://ios.cfw.guide/installing-trollstore-trollinstallerx"]);
+                                } else if (key === "TrollInstallerMDC") {
+                                    officialWebsites.push(["TrollInstallerMDC", "https://dhinakg.github.io/apps.html"]);
+                                    installationGuides.push(["TrollInstallerMDC", "https://ios.cfw.guide/installing-trollstore-trollinstallermdc/"]);
+                                } else {
+                                    officialWebsites.push([key, data.supported[key]]);
+                                    installationGuides.push([key, data.supported[key]]);
+                                }
+                            }
+
+                            return { supported: true, supportedRange: "Supported from " + data.fromVersion + " to " + data.toVersion, officialWebsites: officialWebsites, installationGuides: installationGuides };
+                        } else {
+                            return { supported: true, supportedRange: "Supported from " + data.fromVersion + " to " + data.toVersion, officialWebsites: null, installationGuides: null };
+                        }
+                    }
+                }
+            }
+
+            return { supported: false, supportedRange: null, officialWebsites: null, installationGuides: null };
+        }
+
+        function isVersionInRange(version, fromVersion, toVersion) {
+            var versionComponents = version.split(" ")[0].split(".").map(Number);
+            var fromComponents = fromVersion.split(" ")[0].split(".").map(Number);
+            var toComponents = toVersion.split(" ")[0].split(".").map(Number);
+
+            return compareVersion(versionComponents, fromComponents) !== -1 && compareVersion(versionComponents, toComponents) !== 1;
+        }
+
+        function compareVersion(version1, version2) {
+            for (var i = 0; i < version1.length; i++) {
+                if (version1[i] < version2[i]) {
+                    return -1;
+                } else if (version1[i] > version2[i]) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        function openURL(url) {
+            window.open(url, "_blank");
+        }
+    </script>
+</body>
+</html>
