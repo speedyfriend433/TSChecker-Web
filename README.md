@@ -10,7 +10,7 @@ This project provides a modern web application for checking TrollStore support f
 
 ## Demo
 
-You can try the live demo [here](tschecker.pages.dev).
+You can try the live demo [here](https://tschecker.pages.dev).
 
 ## Installation
 
