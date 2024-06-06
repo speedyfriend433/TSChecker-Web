@@ -24,7 +24,7 @@ function checkSupport() {
     if (result.supported) {
         supportInfoDiv.innerHTML = "<h2>Support Information</h2>" +
             "<p>iOS Version: " + iOSVersion + "</p>" +
-            "<p>TrollStore Support: Supported</p>";
+            "<p>TrollStore Support: <span class='supported'>Supported</span></p>";
 
         if (result.supportedRange) {
             supportInfoDiv.innerHTML += "<p>" + result.supportedRange + "</p>";
@@ -33,20 +33,20 @@ function checkSupport() {
         if (result.officialWebsites) {
             supportInfoDiv.innerHTML += "<h3>Official Websites</h3>";
             result.officialWebsites.forEach(function (website) {
-                supportInfoDiv.innerHTML += "<button onclick=\"openURL('" + website[1] + "')\">" + website[0] + " Official Website</button>";
+                supportInfoDiv.innerHTML += "<button class='btn' onclick=\"openURL('" + website[1] + "')\">" + website[0] + " Official Website</button>";
             });
         }
 
         if (result.installationGuides) {
             supportInfoDiv.innerHTML += "<h3>Installation Guides</h3>";
             result.installationGuides.forEach(function (guide) {
-                supportInfoDiv.innerHTML += "<button onclick=\"openURL('" + guide[1] + "')\">" + guide[0] + " Installation Guide</button>";
+                supportInfoDiv.innerHTML += "<button class='btn' onclick=\"openURL('" + guide[1] + "')\">" + guide[0] + " Installation Guide</button>";
             });
         }
     } else {
         supportInfoDiv.innerHTML = "<h2>Support Information</h2>" +
             "<p>iOS Version: " + iOSVersion + "</p>" +
-            "<p>TrollStore Support: Not Supported</p>";
+            "<p>TrollStore Support: <span class='not-supported'>Not Supported</span></p>";
     }
 }
 
@@ -56,7 +56,6 @@ function trollStoreSupportInfo(iOSVersion, selectedVersionType, selectedArchitec
 
     for (var i = 0; i < trollStoreSupportData.length; i++) {
         var data = trollStoreSupportData[i];
-
         if (isVersionInRange(version, data.fromVersion, data.toVersion)) {
             if (data.platforms.includes(architecture)) {
                 if (Object.keys(data.supported).length > 0) {
@@ -76,7 +75,7 @@ function trollStoreSupportInfo(iOSVersion, selectedVersionType, selectedArchitec
                     };
                 } else {
                     return {
-                        supported: !data.supported.empty,
+                        supported: Object.keys(data.supported).length > 0,
                         supportedRange: "Supported from " + data.fromVersion + " to " + data.toVersion,
                         officialWebsites: null,
                         installationGuides: null
