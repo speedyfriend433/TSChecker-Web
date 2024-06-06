@@ -5,15 +5,15 @@ function checkSupport() {
 
     var trollStoreSupportData = [
         {fromVersion: "14.0 beta 1", toVersion: "14.0 beta 2", platforms: "arm64 (A8) - arm64 (A9-A11)", supported: {}},
-        {fromVersion: "14.0 beta 2", toVersion: "14.8.1", platforms: "arm64 (A8) - arm64 (A9-A11)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX/tree/1.0.2", "TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota"}},
-        {fromVersion: "15.0", toVersion: "15.0", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX/tree/1.0.2", "TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota"}},
+        {fromVersion: "14.0 beta 2", toVersion: "14.8.1", platforms: "arm64 (A8) - arm64 (A9-A11)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX", "TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota"}},
+        {fromVersion: "15.0", toVersion: "15.0", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX", "TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota"}},
         {fromVersion: "15.0 beta 1", toVersion: "15.5 beta 4", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota"}},
-        {fromVersion: "15.5", toVersion: "15.5", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota", "TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX/tree/1.0.2", "TrollInstallerMDC": "https://dhinakg.github.io/apps.html"}},
+        {fromVersion: "15.5", toVersion: "15.5", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota", "TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX", "TrollInstallerMDC": "https://dhinakg.github.io/apps.html"}},
         {fromVersion: "16.0 beta 1", toVersion: "16.0 beta 3", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {}},
-        {fromVersion: "16.0 beta 4", toVersion: "16.6.1", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX/tree/1.0.2", "TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota"}},
+        {fromVersion: "16.0 beta 4", toVersion: "16.6.1", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX", "TrollHelperOTA": "https://ios.cfw.guide/installing-trollstore-trollhelperota"}},
         {fromVersion: "16.7 RC", toVersion: "16.7 RC", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollHelper": "https://ios.cfw.guide/installing-trollstore-trollhelper", "No Install Method": ""}},
         {fromVersion: "16.7", toVersion: "16.7.7", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"Unsupported": ""}},
-        {fromVersion: "17.0 beta 1", toVersion: "17.0 beta 4", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX/tree/1.0.2", "No Install Method": ""}},
+        {fromVersion: "17.0 beta 1", toVersion: "17.0 beta 4", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollInstallerX": "https://github.com/alfiecg24/TrollInstallerX", "No Install Method": ""}},
         {fromVersion: "17.0 beta 5", toVersion: "17.0", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"TrollHelper": "https://ios.cfw.guide/installing-trollstore-trollhelper", "No Install Method": ""}},
         {fromVersion: "17.0.1 and later", toVersion: "17.0.1 and later", platforms: "arm64 (A8) - arm64e (A12-A17/M1-M2)", supported: {"Unsupported": ""}}
     ];
@@ -63,8 +63,13 @@ function trollStoreSupportInfo(iOSVersion, selectedVersionType, selectedArchitec
                     var installationGuides = [];
 
                     for (var key in data.supported) {
-                        officialWebsites.push([key, data.supported[key]]);
-                        installationGuides.push([key, data.supported[key]]);
+                        if (key === "TrollInstallerX") {
+                            officialWebsites.push([key, "https://github.com/alfiecg24/TrollInstallerX"]);
+                            installationGuides.push([key, "https://ios.cfw.guide/installing-trollstore-trollinstallerx/"]);
+                        } else {
+                            officialWebsites.push([key, data.supported[key]]);
+                            installationGuides.push([key, data.supported[key]]);
+                        }
                     }
 
                     return {
